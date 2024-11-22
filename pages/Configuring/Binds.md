@@ -53,7 +53,7 @@ can also use `xev` or `wev` to find keycodes.
 
 ## Misc
 
-### Workspace bindings on non-qwerty layouts 
+### Workspace bindings on non-qwerty layouts
 
 Keys used for keybinds need to be accessible without any modifiers in your layout. For instance, the `French Azerty` layout uses `SHIFT+unmodified_key` to write `0-9` numbers. As such, the workspace keybinds for this layout need to use the names of the `unmodified_key`s, and will not work when using the `0-9` numbers.
 
@@ -200,9 +200,10 @@ bindrl = MOD, KEY, exec, amongus
 
 Flags:
 
-```
+```plain
 l -> locked, will also work when an input inhibitor (e.g. a lockscreen) is active.
 r -> release, will trigger on release of a key.
+o -> longPress, will trigger on long press of a key.
 e -> repeat, will repeat when held.
 n -> non-consuming, key/mouse events will be passed to the active window in addition to triggering the dispatcher.
 m -> mouse, see below.
@@ -228,6 +229,10 @@ bindr = SUPER, SUPER_L, exec, pkill wofi || wofi
 # Describe a bind
 bindd = SUPER, Q, Open my favourite terminal, exec, kitty
 
+# Skip player on long press and only skip 5s on normal press
+bindo = SUPER, XF86AudioNext, exec, playerctl next
+bind = SUPER, XF86AudioNext, exec, playerctl position +5
+```
 # See Mouse Binds section for bindm usage
 ```
 
@@ -359,7 +364,7 @@ Please note that this function will _only_ work with
 ## Submaps
 
 Keybind submaps, also known as _modes_ or _groups_, allow you to activate a
-separate set of keybinds. For example, if you want to enter a "resize" mode 
+separate set of keybinds. For example, if you want to enter a "resize" mode
 which allows you to resize windows with the arrow keys, you can do it like this:
 
 ```ini

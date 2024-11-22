@@ -96,7 +96,13 @@ size, you can use `hyprctl clients`.
 
 ### Static rules
 
-Static rules are evaluated once when the window is opened and never again.
+Static rules are evaluated once when the window is opened and never again. This essentially means that it is always the `initialTitle` and `initialClass` which will be found when matching on `title` and `class`, respectively.
+
+{{< callout type=warning >}}
+
+It is not possible to `float` (or any other of the static rules) a window based on a change in the `title` after the window has been created. This applies to all static rules listed here.
+
+{{< /callout >}}
 
 | Rule | Description |
 | ---- | ----------- |
@@ -112,7 +118,7 @@ Static rules are evaluated once when the window is opened and never again.
 | monitor \[id\] | sets the monitor on which a window should open. `id` can be either id or name (either e.g. `1` or e.g. `DP-1`) |
 | workspace \[w\] | sets the workspace on which a window should open (for workspace syntax, see [dispatchers->workspaces](../Dispatchers#workspaces)). You can also make \[w\] to `unset`, will unset all previous workspace rules applied to this window. You can also add `silent` after the workspace to make the window open silently. |
 | noinitialfocus | disables the initial focus to the window |
-| pin | pins the window  (i.e. show it on all workspaces) *note: floating only* |
+| pin | pins the window  (i.e. show it on all workspaces) _note: floating only_ |
 | unset | removes all previously set rules for the given parameters. Please note it has to match EXACTLY. |
 | nomaxsize | removes max size limitations. Especially useful with windows that report invalid max sizes (e.g. winecfg) |
 | stayfocused | forces focus on the window as long as it's visible |
@@ -133,7 +139,7 @@ Dynamic rules are re-evaluated every time a property changes.
 | maxsize \[x\] \[y\] | sets the maximum size (x,y -> int) |
 | minsize \[x\] \[y\] | sets the minimum size (x,y -> int) |
 
-The following rules can also be set with [`hyprctl setprop`](../Using-hyprctl#setprop):
+The following rules can also be set with [`setprop`](../Dispatchers#setprop):
 
 | Rule | Description |
 | ---- | ----------- |
@@ -164,10 +170,10 @@ The following rules can also be set with [`hyprctl setprop`](../Using-hyprctl#se
 When using window rules, \[on\] can be set to `0` for off, `1` for on or not set
 for default.
 
-When using `hyprctl setprop`, \[on\] can be set to `0` for off, `1` for on,
+When using `setprop`, \[on\] can be set to `0` for off, `1` for on,
 `toggle` to toggle the state or `unset` to unset previous values.
 
-When using `hyprctl setprop`, \[int\] can also be `unset` to unset previous
+When using `setprop`, \[int\] can also be `unset` to unset previous
 values.
 
 ### `group` window rule options

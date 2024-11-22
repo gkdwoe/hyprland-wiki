@@ -19,7 +19,7 @@ For this case, the writer is taking the example of their laptop.
 Upon running `lspci | grep -E 'VGA|3D'`, One can list all the video devices
 available.
 
-```
+```plain
 01:00.0 VGA compatible controller: NVIDIA Corporation TU117M [GeForce GTX 1650 Mobile / Max-Q] (rev a1)
 06:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Cezanne [Radeon Vega Series / Radeon Vega Mobile Series] (rev c6)
 ```
@@ -29,7 +29,7 @@ Here it is clear that 2 GPUs are available, the dedicated NVIDIA GTX 1650 Mobile
 
 Now, run `ls -l /dev/dri/by-path`
 
-```
+```plain
  total 0
 lrwxrwxrwx 1 root root  8 Jul 14 15:45 pci-0000:01:00.0-card -> ../card0
 lrwxrwxrwx 1 root root 13 Jul 14 15:45 pci-0000:01:00.0-render -> ../renderD128
@@ -64,7 +64,7 @@ required.
 If instead you would like to use another GPU, or the wrong GPU is picked by default,
 set `AQ_DRM_DEVICES` to a `:`-separated list of card paths, e.g.
 
-```
+```plain
 env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
 ```
 
@@ -73,3 +73,14 @@ whatever reason, use `card1`.
 
 You should now be able to use an integrated GPU for lighter GPU loads,
 including Hyprland, or default to your dGPU if you prefer.
+
+{{< callout type=info >}}
+
+[uwsm](../../Useful-Utilities/Systemd-start) users are advised to export the `AQ_DRM_DEVICES` variable inside `~/.config/uwsm/env-hyprland`, instead. 
+This method ensures that the variable is properly exported to the systemd environment without conflicting with other compositors or desktop environments.
+
+```plain
+export AQ_DRM_DEVICES="/dev/dri/card0;/dev/dri/card1"
+```
+
+{{< /callout >}}

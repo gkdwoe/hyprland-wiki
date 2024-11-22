@@ -35,10 +35,10 @@ _[wiki page](../Crashes-and-Bugs)_
 For Nvidia graphics - This issue appears to be resolved when using Nvidia
 Drivers 525.60.11 or later, but it may persist with older drivers.
 
-For systems with limited hardware (Ex. iGPU, USB-C, USB Hubs) - Set `env = AQ_NO_MODIFIERS,1` in your config \
+For systems with limited hardware (Ex. iGPU, USB-C, USB Hubs) - Set `env = AQ_NO_MODIFIERS,1` in your config.
 To diagnose if you have the exact problem above you can get a [DRM log](https://wiki.hyprland.org/Crashes-and-Bugs/#debugging-drm-issues) and look for
 
-```
+```plain
 Requested display configuration exceeds system DDB limitations
 ```
 
@@ -78,7 +78,6 @@ utility, try our own screenshotting utility:
 
 **Option 2:** You can also use hyprshot, more info [here](https://github.com/Gustash/Hyprshot).
 
-
 **Option 3:** Install `flameshot`.
 
 Flameshot has many built-in features like allowing you to draw with a paintbrush,
@@ -90,7 +89,7 @@ The options above are smoother and more native to Wayland. If you still want to
 use Flameshot, here are some configuration recommendations by users who've found
 workarounds.
 
-```
+```ini
 # noanim isn't necessary but animations with these rules might look bad. use at your own discretion.
 windowrulev2 = noanim, class:^(flameshot)$
 windowrulev2 = float, class:^(flameshot)$
@@ -158,6 +157,7 @@ Be aware that they will not prevent tty-changing using Ctrl-Alt-F1...F7.
 ### How do I change me mouse cursor?
 
 See [hyprcursor](../Hypr-Ecosystem/hyprcursor)
+
 1. Set the GTK cursor using [nwg-look](https://github.com/nwg-piotr/nwg-look).
 2. Add `exec-once=hyprctl setcursor [THEME] [SIZE]` to your config and restart Hyprland.
 
@@ -215,7 +215,7 @@ exec-once = handle_monitor_connect.sh
 
 where `handle_monitor_connect.sh` is: (example)
 
-```sh
+```sh {filename="handle_monitor_connect.sh"}
 #!/bin/sh
 
 handle() {
@@ -242,9 +242,7 @@ Until then, OTD is the way to go.
 
 ### Some of my apps take a really long time to open...?
 
-_~/.config/hypr/hyprland.conf_
-
-```ini
+```ini {filename="~/.config/hypr/hyprland.conf"}
 exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 ```
 
@@ -284,7 +282,7 @@ Setting `misc:middle_click_paste` to `false` disables the feature altogether wit
 
 **_Useful Optimizations_**:
 
-- `decoration:blur:enabled = false` and `decoration:drop_shadow = false` to disable
+- `decoration:blur:enabled = false` and `decoration:shadow:enabled = false` to disable
   fancy but battery hungry effects.
 
 - `misc:vfr = true`, since it'll lower the amount of sent frames when nothing is
@@ -351,10 +349,10 @@ pop-up. It should look something like this:
 
 ```bash
 Window 55d794495400 -> :
-	...
-	class: [CLASS here]
-	title: [TITLE here]
-	...
+  ...
+  class: [CLASS here]
+  title: [TITLE here]
+  ...
 ```
 
 If the pop-up disappears as you hover over it, you can add to your config:
@@ -414,7 +412,7 @@ monitor = Unknown-1,disabled
 
 If you are using a -git package, this is a common occurrence when ABI-breaking updates are done.
 
-***Do not*** symlink different .so versions, this will cause crashes!!!
+_**Do not**_ symlink different .so versions, this will cause crashes!!!
 
 Instead, find all hypr* packages with `-git` you have installed, remove them (possibly remove dependencies of them, too)
 and simply install them again.
@@ -426,3 +424,14 @@ If you are not using any -git packages, this is a mistake in your distro's packa
 ### My cursor is a hyprland icon?
 
 This means you have no hyprcursor theme installed, and hyprland failed to find an XCursor theme as well. Install a cursor theme.
+
+### Smart gaps please?
+
+[Here](../Configuring/Workspace-Rules/#smart-gaps).
+
+### Hyprwinwrap is not visible through blurred windows
+
+This is a side effect of the [decoration:blur:new_optimizations](../Configuring/Variables/#blur).
+You have two options to resolve it.
+1. Set `decoration:blur:new_optimizations` to `false` - This will preserve the exact same appearance, but may have a slight performance cost.
+2. Set `decoration:blur:ignore_opacity` to `false` - This will drastically affect the appearance, but should maintain the original performance.

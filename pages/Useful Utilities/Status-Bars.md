@@ -27,6 +27,12 @@ Hyprland, add this line to your Hyprland configuration:
 exec-once = waybar
 ```
 
+Waybar also provides a systemd service. If you use Hyprland with [uwsm](../../Useful-Utilities/Systemd-start), you can enable it, using the following command.
+
+```ini
+systemctl --user enable --now waybar.service
+```
+
 ### Waybar FAQ
 
 #### Waybar popups render behind the windows
@@ -73,7 +79,7 @@ If you are using multiple monitors, you may want to insert the following option:
 ## Eww
 
 [Eww](https://github.com/elkowar/eww) (ElKowar's Wacky Widgets) is a widget
-system made in Rust + GTK, which lets allows the creation of custom widgets
+system made in Rust + GTK, which allows the creation of custom widgets
 similarly to AwesomeWM. The key difference is that it is independent of window
 manager/compositor.
 
@@ -139,24 +145,24 @@ workspaces. It requires [bash](https://linux.die.net/man/1/bash),
 ```sh
 #!/usr/bin/env bash
 function clamp {
-	min=$1
-	max=$2
-	val=$3
-	python -c "print(max($min, min($val, $max)))"
+  min=$1
+  max=$2
+  val=$3
+  python -c "print(max($min, min($val, $max)))"
 }
 
 direction=$1
 current=$2
 if test "$direction" = "down"
 then
-	target=$(clamp 1 10 $(($current+1)))
-	echo "jumping to $target"
-	hyprctl dispatch workspace $target
+  target=$(clamp 1 10 $(($current+1)))
+  echo "jumping to $target"
+  hyprctl dispatch workspace $target
 elif test "$direction" = "up"
 then
-	target=$(clamp 1 10 $(($current-1)))
-	echo "jumping to $target"
-	hyprctl dispatch workspace $target
+  target=$(clamp 1 10 $(($current-1)))
+  echo "jumping to $target"
+  hyprctl dispatch workspace $target
 fi
 ```
 
@@ -177,13 +183,13 @@ socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket
 #!/usr/bin/env bash
 
 spaces (){
-	WORKSPACE_WINDOWS=$(hyprctl workspaces -j | jq 'map({key: .id | tostring, value: .windows}) | from_entries')
-	seq 1 10 | jq --argjson windows "${WORKSPACE_WINDOWS}" --slurp -Mc 'map(tostring) | map({id: ., windows: ($windows[.]//0)})'
+  WORKSPACE_WINDOWS=$(hyprctl workspaces -j | jq 'map({key: .id | tostring, value: .windows}) | from_entries')
+  seq 1 10 | jq --argjson windows "${WORKSPACE_WINDOWS}" --slurp -Mc 'map(tostring) | map({id: ., windows: ($windows[.]//0)})'
 }
 
 spaces
 socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | while read -r line; do
-	spaces
+  spaces
 done
 ```
 
@@ -245,15 +251,4 @@ exec-once = hybrid-bar
 
 #### Blur
 
-To activate blur, set `blurls = NAMESPACE` in your Hyprland configuration, where
-`NAMESPACE` is the gtk-layer-shell namespace of your HybridBar. The default
-namespace is `gtk-layer-shell` and can be changed in the HybridBar configuration
-at
-
-```json
-{
-     "hybrid" {
-          "namespace": "namespace name"
-     }
-}
-```
+To activate blur for your status bar, have a look at [layer rules](https://wiki.hyprland.org/Configuring/Window-Rules/#layer-rules).

@@ -34,7 +34,7 @@ Hyprland.
 ## Distros
 
 Arch, NixOS and openSUSE Tumbleweed are very supported. For any other distro
-(not based on Arch/Nix) you might have varying amounts of success. However,
+(not based on Arch/Nix/openSUSE) you might have varying amounts of success. However,
 since Hyprland is extremely bleeding-edge, distros like Pop!\_OS, Ubuntu, etc.
 might have **major** issues running Hyprland.
 
@@ -265,7 +265,7 @@ built in CI by GitHub Actions.
 You can add this repository by creating a file such as
 `/etc/xbps.d/hyprland-void.conf` with the following contents:
 
-```plain
+```plain {filename="/etc/xbps.d/hyprland-void.conf"}
 repository=https://raw.githubusercontent.com/Makrennel/hyprland-void/repository-x86_64-glibc
 ```
 
@@ -304,7 +304,7 @@ For detailed instructions on installing this build see
 
 Hyprland is available in Alpine's [testing repository](https://wiki.alpinelinux.org/wiki/Repositories#Testing) which can be enabled in `/etc/apk/repositories` by adding
 
-```plain
+```plain {filename="/etc/apk/repositories"}
 http://dl-cdn.alpinelinux.org/alpine/edge/testing
 ```
 
@@ -341,6 +341,7 @@ epmi hypridle
 epmi hyprpaper
 epmi hyprpicker
 ```
+
 {{% /details %}}
 
 {{% details title="Solus*" closed="true" %}}
@@ -382,7 +383,7 @@ C++ standard library has to support that (`gcc>=14` or `clang>=18`).
 {{% details title="Arch" closed="true" %}}
 
 ```plain
-yay -S gdb ninja gcc cmake meson libxcb xcb-proto xcb-util xcb-util-keysyms libxfixes libx11 libxcomposite xorg-xinput libxrender pixman wayland-protocols cairo pango seatd libxkbcommon xcb-util-wm xorg-xwayland libinput libliftoff libdisplay-info cpio tomlplusplus hyprlang hyprcursor hyprwayland-scanner xcb-util-errors hyprutils-git
+yay -S ninja gcc cmake meson libxcb xcb-proto xcb-util xcb-util-keysyms libxfixes libx11 libxcomposite libxrender pixman wayland-protocols cairo pango seatd libxkbcommon xcb-util-wm xorg-xwayland libinput libliftoff libdisplay-info cpio tomlplusplus hyprlang-git hyprcursor-git hyprwayland-scanner-git xcb-util-errors hyprutils-git
 ```
 
 _(Please make a pull request or open an issue if any packages are missing from
@@ -403,7 +404,7 @@ zypper in gcc-c++ git meson cmake "pkgconfig(cairo)" "pkgconfig(egl)" "pkgconfig
 
 {{% details title="FreeBSD" closed="true" %}}
 
-```plain
+```sh
 pkg install git pkgconf gmake gcc evdev-proto cmake wayland-protocols wayland libglvnd libxkbcommon libinput cairo pango pixman libxcb
 pkg install meson jq hwdata libdisplay-info libliftoff
 export CC=gcc CXX=g++ LDFLAGS="-static-libstdc++ -static-libgcc"
@@ -431,7 +432,7 @@ packaged for your distro of choice:
 
 ### CMake (recommended)
 
-```Plain
+```sh
 git clone --recursive https://github.com/hyprwm/Hyprland
 cd Hyprland
 make all && sudo make install
@@ -442,7 +443,7 @@ installed._
 
 ### Meson
 
-```plain
+```sh
 meson subprojects update --reset
 meson setup build
 ninja -C build

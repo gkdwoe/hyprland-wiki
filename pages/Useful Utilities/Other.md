@@ -1,5 +1,5 @@
 ---
-weight: 10
+weight: 11
 title: Other
 ---
 
@@ -28,11 +28,13 @@ for Hyprland's IPC written in Rust.
 
 ### Screen shaders/color temperature
 
-[hyprshade](https://github.com/loqusion/hyprshade) by _loqusion_: Utility for
-swapping and scheduling screen shaders; also functions as an
-[automatic color temperature shifter](https://en.wikipedia.org/wiki/F.lux).
+- [hyprshade](https://github.com/loqusion/hyprshade) by _loqusion_: Utility for
+  swapping and scheduling screen shaders; also functions as an
+  [automatic color temperature shifter](https://en.wikipedia.org/wiki/F.lux).
+- [gammastep](https://gitlab.com/chinstrap/gammastep) by _Chinstrap_: Control temperature color automatically depending on the time of the day and location.
 
 ### Wireless settings
+
 - [iwgtk](https://github.com/J-Lentz/iwgtk) by _Jesse Lentz_: WiFi settings frontend for `iwd` in GTK
 - [blueberry](https://github.com/linuxmint/blueberry) by _Linux Mint_: Bluetooth settings frontend in GTK
 - [Overskride](https://github.com/kaii-lb/overskride) by _kaii-lb_: A simple yet powerful bluetooth client in GTK4
@@ -63,10 +65,6 @@ exec-once = udiskie
 
 [See more uses here](https://github.com/coldfix/udiskie/wiki/Usage).
 
-### Advanced Systemd Session Management
-
-[UWSM](https://github.com/Vladimir-csp/uwsm) by _Vladimir-csp_: Wraps standalone Wayland compositors into a set of Systemd units on the fly. Provides robust session management including environment, XDG autostart support, bi-directional binding with login session, login shell integration, and clean shutdown. Optional user unit control utility via dmenu-like menu, failed unit monitor.
-
 ### Other useful utilities
 
-The website [Are we Wayland Yet](https://arewewaylandyet.com/) details some other useful utilities and applications for Wayland like docks, email clients, and so on, along with some other useful information about compatibility on Wayland.
+The website [We Are Wayland Now](https://wearewaylandnow.com/) details some other useful utilities and applications for Wayland like docks, email clients, and so on, along with some other useful information about compatibility on Wayland.

@@ -3,7 +3,7 @@ weight: 2
 title: Variables
 ---
 
-For basic syntax info, see [Configuring Hyprland](../Configuring-Hyprland).
+For basic syntax info, see [Configuring Hyprland](..).
 
 This page documents all the "options" of Hyprland. For binds, monitors,
 animations, etc. see the sidebar. For anything else, see
@@ -31,9 +31,9 @@ the layout pages and not here. (See the Sidebar for Dwindle and Master layouts)
 
 You have 3 options:
 
-rgba(), e.g. `rgba(b3ff1aee)`
+rgba(), e.g. `rgba(b3ff1aee)`, or the decimal equivalent `rgba(179, 255, 26, 0.933)`
 
-rgb(), e.g. `rgb(b3ff1a)`
+rgb(), e.g. `rgb(b3ff1a)`, or the decimal equivalent  `rgb(179, 255, 26)`
 
 legacy, e.g. `0xeeb3ff1a` -> ARGB order
 
@@ -81,6 +81,7 @@ _Subcategory `general:snap:`_
 | enabled | enable snapping for floating windows | bool | false |
 | window_gap | minimum gap in pixels between windows before snapping | int | 10 |
 | monitor_gap | minimum gap in pixels between window and monitor edges before snapping | int | 10 |
+| border_overlap | if true, windows snap such that only one border's worth of space is between them | bool | false |
 
 {{< callout type=important >}}
 
@@ -110,14 +111,6 @@ Doing `general:snap {` is **invalid**!
 | active_opacity | opacity of active windows. [0.0 - 1.0] | float | 1.0 |
 | inactive_opacity | opacity of inactive windows. [0.0 - 1.0] | float | 1.0 |
 | fullscreen_opacity | opacity of fullscreen windows. [0.0 - 1.0] | float | 1.0 |
-| drop_shadow | enable drop shadows on windows | bool | true |
-| shadow_range | Shadow range ("size") in layout px | int | 4 |
-| shadow_render_power | in what power to render the falloff (more power, the faster the falloff) [1 - 4] | int | 3 |
-| shadow_ignore_window | if true, the shadow will not be rendered behind the window itself, only around it. | bool | true |
-| col.shadow | shadow's color. Alpha dictates shadow's opacity. | color | 0xee1a1a1a |
-| col.shadow_inactive | inactive shadow color. (if not set, will fall back to col.shadow) | color | unset |
-| shadow_offset | shadow's rendering offset. | vec2 | [0, 0] |
-| shadow_scale | shadow's scale. [0.0 - 1.0] | float | 1.0 |
 | dim_inactive | enables dimming of inactive windows | bool | false |
 | dim_strength | how much inactive windows should be dimmed [0.0 - 1.0] | float | 0.5 |
 | dim_special | how much to dim the rest of the screen by when a special workspace is open. [0.0 - 1.0] | float | 0.2 |
@@ -133,9 +126,9 @@ _Subcategory `decoration:blur:`_
 | enabled | enable kawase window background blur | bool | true |
 | size | blur size (distance) | int | 8 |
 | passes | the amount of passes to perform | int | 1 |
-| ignore_opacity | make the blur layer ignore the opacity of the window | bool | false |
+| ignore_opacity | make the blur layer ignore the opacity of the window | bool | true |
 | new_optimizations | whether to enable further optimizations to the blur. Recommended to leave on, as it will massively improve performance. | bool | true |
-| xray | if enabled, floating windows will ignore tiled windows in their blur. Only available if blur_new_optimizations is true. Will reduce overhead on floating blur significantly. | bool | false |
+| xray | if enabled, floating windows will ignore tiled windows in their blur. Only available if new_optimizations is true. Will reduce overhead on floating blur significantly. | bool | false |
 | noise | how much noise to apply. [0.0 - 1.0] | float | 0.0117 |
 | contrast | contrast modulation for blur. [0.0 - 2.0] | float | 0.8916 |
 | brightness | brightness modulation for blur. [0.0 - 2.0] | float | 0.8172 |
@@ -154,6 +147,22 @@ Increasing `blur:passes` is necessary to prevent blur looking wrong on higher
 strain on the GPU.
 
 {{< /callout >}}
+
+#### Shadow
+
+_Subcategory `decoration:shadow:`_
+
+| name | description | type | default |
+| --- | --- | --- | --- |
+| enabled | enable drop shadows on windows | bool | true |
+| range | Shadow range ("size") in layout px | int | 4 |
+| render_power | in what power to render the falloff (more power, the faster the falloff) [1 - 4] | int | 3 |
+| sharp | if enabled, will make the shadows sharp, akin to an infinite render power | bool | false |
+| ignore_window | if true, the shadow will not be rendered behind the window itself, only around it. | bool | true |
+| color | shadow's color. Alpha dictates shadow's opacity. | color | 0xee1a1a1a |
+| color_inactive | inactive shadow color. (if not set, will fall back to color) | color | unset |
+| offset | shadow's rendering offset. | vec2 | [0, 0] |
+| scale | shadow's scale. [0.0 - 1.0] | float | 1.0 |
 
 ### Animations
 
@@ -283,8 +292,9 @@ _Subcategory `input:tablet:`_
 | name | description | type | default |
 | --- | --- | --- | --- |
 | transform | transform the input from tablets. The possible transformations are the same as [those of the monitors](../Monitors/#rotating) | int | 0 |
-| output | the monitor to bind tablets. Empty means unbound. | string | \[\[Empty\]\] |
-| region_position | position of the mapped region in monitor layout. | vec2 | [0, 0] |
+| output | the monitor to bind tablets. Can be `current` or a monitor name. Leave empty to map across all monitors. | string | \[\[Empty\]\] |
+| region_position | position of the mapped region in monitor layout relative to the top left corner of the bound monitor or all monitors. | vec2 | [0, 0] |
+| absolute_region_position | whether to treat the `region_position` as an absolute position in monitor layout. Only applies when `output` is empty. | bool | false |
 | region_size | size of the mapped region. When this variable is set, tablet input will be mapped to the region. [0, 0] or invalid size means unset. | vec2 | [0, 0] |
 | relative_input | whether the input should be relative | bool | false |
 | left_handed | if enabled, the tablet will be rotated 180 degrees | bool | false |
@@ -323,6 +333,7 @@ Described [here](../Keywords#per-device-input-configs).
 | focus_removed_window | whether Hyprland should focus on the window that has just been moved out of the group | bool | true |
 | drag_into_group | whether dragging a window into a unlocked group will merge them. Options: 0 (disabled), 1 (enabled), 2 (only when dragging into the groupbar) | int | 1 |
 | merge_groups_on_drag | whether window groups can be dragged into other groups | bool | true |
+| merge_groups_on_groupbar | whether one group will be merged with another when dragged into its groupbar | bool | true |
 | merge_floated_into_tiled_on_groupbar | whether dragging a floating window into a tiled window groupbar will merge them | bool | false |
 | group_on_movetoworkspace | whether using movetoworkspace[silent] will merge the window into the workspace's solitary unlocked group | bool | false |
 | col.border_active | active group border color | gradient | 0x66ffff00 |
@@ -337,7 +348,7 @@ _Subcategory `group:groupbar:`_
 | name | description | type | default |
 | --- | --- | --- | --- |
 | enabled | enables groupbars | bool | true |
-| font_family | font used to display groupbar titles, use `misc:font_family` if not specified | string | [[Empty]] |
+| font_family | font used to display groupbar titles, use `misc:font_family` if not specified | string | [\[Empty]] |
 | font_size | font size of groupbar title | int | 8 |
 | gradients | enables gradients | bool | true |
 | height | height of the groupbar | int | 14 |
@@ -346,10 +357,10 @@ _Subcategory `group:groupbar:`_
 | render_titles | whether to render titles in the group bar decoration | bool | true |
 | scrolling | whether scrolling in the groupbar changes group active window | bool | true |
 | text_color | controls the group bar text color | color | 0xffffffff |
-| col.active | active group border color | gradient | 0x66ffff00 |
-| col.inactive | inactive (out of focus) group border color | gradient | 0x66777700 |
-| col.locked_active | active locked group border color | gradient | 0x66ff5500 |
-| col.locked_inactive | inactive locked group border color | gradient | 0x66775500 |
+| col.active | active group bar background color | gradient | 0x66ffff00 |
+| col.inactive | inactive (out of focus) group bar background color | gradient | 0x66777700 |
+| col.locked_active | active locked group bar background color | gradient | 0x66ff5500 |
+| col.locked_inactive | inactive locked group bar background color | gradient | 0x66775500 |
 
 ### Misc
 
@@ -359,7 +370,7 @@ _Subcategory `group:groupbar:`_
 | disable_splash_rendering | disables the Hyprland splash rendering. (requires a monitor reload to take effect) | bool | false |
 | col.splash | Changes the color of the splash text (requires a monitor reload to take effect). | color | 0xffffffff |
 | font_family | Set the global default font to render the text including debug fps/notification, config error messages and etc., selected from system fonts. | string | Sans |
-| splash_font_family | Changes the font used to render the splash text, selected from system fonts (requires a monitor reload to take effect). | string | [[Empty]] |
+| splash_font_family | Changes the font used to render the splash text, selected from system fonts (requires a monitor reload to take effect). | string | [\[Empty]] |
 | force_default_wallpaper | Enforce any of the 3 default wallpapers. Setting this to `0` or `1` disables the anime background. `-1` means "random". [-1/0/1/2] | int | -1 |
 | vfr | controls the VFR status of Hyprland. Heavily recommended to leave enabled to conserve resources. | bool | true |
 | vrr | controls the VRR (Adaptive Sync) of your monitors. 0 - off, 1 - on, 2 - fullscreen only [0/1/2] | int | 0 |
@@ -371,8 +382,8 @@ _Subcategory `group:groupbar:`_
 | animate_mouse_windowdragging | If true, will animate windows being dragged by mouse, note that this can cause weird behavior on some curves | bool | false |
 | disable_autoreload | If true, the config will not reload automatically on save, and instead needs to be reloaded with `hyprctl reload`. Might save on battery. | bool | false |
 | enable_swallow | Enable window swallowing | bool | false |
-| swallow_regex | The *class* regex to be used for windows that should be swallowed (usually, a terminal). To know more about the list of regex which can be used [use this cheatsheet](https://github.com/ziishaned/learn-regex/blob/master/README.md). | str | \[\[Empty\]\] |
-| swallow_exception_regex | The *title* regex to be used for windows that should *not* be swallowed by the windows specified in swallow_regex  (e.g. wev). The regex is matched against the parent (e.g. Kitty) window's title on the assumption that it changes to whatever process it's running. | str | \[\[Empty\]\] |
+| swallow_regex | The _class_ regex to be used for windows that should be swallowed (usually, a terminal). To know more about the list of regex which can be used [use this cheatsheet](https://github.com/ziishaned/learn-regex/blob/master/README.md). | str | \[\[Empty\]\] |
+| swallow_exception_regex | The _title_ regex to be used for windows that should _not_ be swallowed by the windows specified in swallow_regex  (e.g. wev). The regex is matched against the parent (e.g. Kitty) window's title on the assumption that it changes to whatever process it's running. | str | \[\[Empty\]\] |
 | focus_on_activate | Whether Hyprland should focus an app that requests to be focused (an `activate` request) | bool | false |
 | mouse_move_focuses_monitor | Whether mouse moving into a different monitor should focus it | bool | true |
 | render_ahead_of_time | [Warning: buggy] starts rendering _before_ your monitor displays a frame in order to lower latency | bool | false |
@@ -386,6 +397,7 @@ _Subcategory `group:groupbar:`_
 | middle_click_paste | whether to enable middle-click-paste (aka primary selection) | bool | true |
 | render_unfocused_fps | the maximum limit for renderunfocused windows' fps in the background (see also [Window-Rules](../Window-Rules/#dynamic-rules) - `renderunfocused`)| int | 15 |
 | disable_xdg_env_checks | disable the warning if XDG environment is externally managed | bool | false |
+| lockdead_screen_delay | the delay in ms after the lockdead screen appears if the lock screen did not appear after a lock event occurred | int | 1000 |
 
 ### Binds
 
@@ -424,13 +436,14 @@ _Subcategory `group:groupbar:`_
 | explicit_sync | Whether to enable explicit sync support. Requires a hyprland restart. 0 - no, 1 - yes, 2 - auto based on the gpu driver | int | 2 |
 | explicit_sync_kms | Whether to enable explicit sync support for the KMS layer. Requires explicit_sync to be enabled. 0 - no, 1 - yes, 2 - auto based on the gpu driver | int | 2 |
 | direct_scanout | Enables direct scanout. Direct scanout attempts to reduce lag when there is only one fullscreen application on a screen (e.g. game). It is also recommended to set this to false if the fullscreen application shows graphical glitches. | bool | false |
+| expand_undersized_textures | Whether to expand undersized textures along the edge, or rather stretch the entire texture. | bool | true |
 
 ### Cursor
 
 | name | description | type | default |
 | --- | --- | --- | --- |
 | sync_gsettings_theme | sync xcursor theme with gsettings, it applies cursor-theme and cursor-size on theme load to gsettings making most CSD gtk based clients use same xcursor theme and size. | bool | true |
-| no_hardware_cursors | disables hardware cursors | bool | false |
+| no_hardware_cursors | disables hardware cursors. Set to 2 for `auto` which disables them on Nvidia, while keeping them enabled otherwise. | int | 2 |
 | no_break_fs_vrr | disables scheduling new frames on cursor movement for fullscreen apps with VRR enabled to avoid framerate spikes (requires `no_hardware_cursors = true`) | bool | false |
 | min_refresh_rate | minimum refresh rate for cursor movement when `no_break_fs_vrr` is active. Set to minimum supported refresh rate or higher | int | 24 |
 | hotspot_padding | the padding, in logical px, between screen edges and the cursor | int | 1 |
@@ -444,7 +457,7 @@ _Subcategory `group:groupbar:`_
 | enable_hyprcursor | whether to enable hyprcursor support | bool | true |
 | hide_on_key_press | Hides the cursor when you press any key until the mouse is moved. | bool | false |
 | hide_on_touch | Hides the cursor when the last input was a touch input until a mouse input is done. | bool | true |
-| allow_dumb_copy | Makes HW cursors work on Nvidia, at the cost of a possible hitch whenever the image changes | bool | false |
+| use_cpu_buffer | Makes HW cursors use a CPU buffer. Required on Nvidia to have HW cursors. Experimental. | bool | false |
 
 ### Debug
 

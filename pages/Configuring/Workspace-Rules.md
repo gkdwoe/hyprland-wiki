@@ -19,19 +19,20 @@ Selectors have props separated by a space. No spaces are allowed inside props
 themselves.
 
 Props:
- - `r[A-B]` - ID range from A to B inclusive
- - `s[bool]` - Whether the workspace is special or not
- - `n[bool]`, `n[s:string]`, `n[e:string]` - named actions. `n[bool]` ->
-    whether a workspace is a named workspace, `s` and `e` are starts and ends
-    with respectively
- - `m[monitor]` - Monitor selector
- - `w[(flags)A-B]`, `w[(flags)X]` - Prop for window counts on the workspace.
-    A-B is an inclusive range, X is a specific number. Flags can be omitted.
-    It can be `t` for tiled-only, `f` for floating-only, `g` to count groups
-    instead of windows, and `v` to count only visible windows.
- - `f[-1]`, `f[0]`, `f[1]`, `f[2]` - fullscreen state of the workspace. `-1`: no
-    fullscreen, `0`: fullscreen, `1`: maximized, `2`, fullscreen without
-    fullscreen state sent to the window.
+
+- `r[A-B]` - ID range from A to B inclusive
+- `s[bool]` - Whether the workspace is special or not
+- `n[bool]`, `n[s:string]`, `n[e:string]` - named actions. `n[bool]` ->
+  whether a workspace is a named workspace, `s` and `e` are starts and ends
+  with respectively
+- `m[monitor]` - Monitor selector
+- `w[(flags)A-B]`, `w[(flags)X]` - Prop for window counts on the workspace.
+  A-B is an inclusive range, X is a specific number. Flags can be omitted.
+  It can be `t` for tiled-only, `f` for floating-only, `g` to count groups
+  instead of windows, and `v` to count only visible windows.
+- `f[-1]`, `f[0]`, `f[1]`, `f[2]` - fullscreen state of the workspace. `-1`: no
+  fullscreen, `0`: fullscreen, `1`: maximized, `2`, fullscreen without
+  fullscreen state sent to the window.
 
 ### Syntax
 
@@ -55,17 +56,15 @@ workspace = w[tg1-4], shadow:false
 
 #### Smart gaps
 
-To replicate "smart gaps" / "no gaps when only" from other WMs/Compositors, use
+To replicate "smart gaps" / "no gaps when only" from other WMs/Compositors, use this bad boy:
 
 ```ini
-workspace = w[t1], gapsout:0, gapsin:0, border: 0, rounding:0
-workspace = w[tg1], gapsout:0, gapsin:0, border: 0, rounding:0
-```
-
-If you want no gaps when a window is maximised (but not fullscreen), add this rule as well
-
-```ini
-workspace = f[1], gapsout:0, gapsin:0, border: 0, rounding:0
+workspace = w[tv1], gapsout:0, gapsin:0
+workspace = f[1], gapsout:0, gapsin:0
+windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
+windowrulev2 = rounding 0, floating:0, onworkspace:w[tv1]
+windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
+windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
 ```
 
 ## Rules

@@ -19,7 +19,7 @@ currently an alpha stage attempt to open source a part of their closed source
 driver for newer cards.
 
 If the proprietary drivers support your graphics card, it's generally recommended
-to use them instead, as it has significantly improved performance 
+to use them instead, as it has significantly improved performance
 and power management for newer GPUs.
 
 However, keep in mind that if the proprietary Nvidia drivers do not work
@@ -39,18 +39,18 @@ One issue is with [suspend](https://github.com/NVIDIA/open-gpu-kernel-modules/is
 You can choose between the `nvidia` or the `nvidia-dkms` package. There are pros and cons
 for each, but it is generally recommended to use the `dkms` package,
 as you won't have to rebuild the initramfs [manually](https://wiki.archlinux.org/title/NVIDIA#mkinitcpio) every time the kernel and drivers update, for example.
-If you're using a kernel that isn't `linux` or `linux-lts`, the `dkms` package is *required*.
+If you're using a kernel that isn't `linux` or `linux-lts`, the `dkms` package is _required_.
 
 ## Installation
 
 Install the following packages:
 
 1. `nvidia` or `nvidia-dkms`: The driver itself. Optionally, the open source drivers
-from NVIDIA can be installed as `nvidia-open` or `nvidia-open-dkms`.
+   from NVIDIA can be installed as `nvidia-open` or `nvidia-open-dkms`.
 2. `nvidia-utils`: The userspace graphics drivers. You need this for running Vulkan
-applications. If you'd like to use apps like Steam or Wine, install `lib32-nvidia-utils` as well.
+   applications. If you'd like to use apps like Steam or Wine, install `lib32-nvidia-utils` as well.
 3. `egl-wayland` (`libnvidia-egl-wayland1` and `libnvidia-egl-gbm1` on Ubuntu): This is required
-in order to enable compatibility between the EGL API and the Wayland protocol.
+   in order to enable compatibility between the EGL API and the Wayland protocol.
 
 ## DRM kernel mode setting
 
@@ -60,13 +60,13 @@ driver modules need to be added to the initramfs.
 
 Edit `/etc/mkinitcpio.conf`. In the `MODULES` array, add the following module names:
 
-```ini
+```conf {filename="/etc/mkinitcpio.conf"}
 MODULES=(... nvidia nvidia_modeset nvidia_uvm nvidia_drm ...)
 ```
 
 Then, create and edit `/etc/modprobe.d/nvidia.conf`. Add this line to the file:
 
-```ini
+```conf {filename="/etc/modprobe.d/nvidia.conf"}
 options nvidia_drm modeset=1 fbdev=1
 ```
 
@@ -78,12 +78,14 @@ More information is available [here](https://wiki.archlinux.org/title/NVIDIA#DRM
 
 Add these variables to your Hyprland config:
 
-```sh
+```ini
 env = LIBVA_DRIVER_NAME,nvidia
-env = XDG_SESSION_TYPE,wayland
-env = GBM_BACKEND,nvidia-drm
 env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+```
 
+and set this variable:
+
+```ini
 cursor {
     no_hardware_cursors = true
 }
@@ -94,16 +96,17 @@ cursor {
 Previously used `WLR_NO_HARDWARE_CURSORS` environment variable has been deprecated.
 Do not set it in your configs. Use `cursor:no_hardware_cursors` instead.
 
-If you want to try hardware cursors, you can enable them, but it will require also enabling `cursor:allow_dumb_copy` which
-may cause small hitches whenever the cursor shape changes. If this is a problem on your system,
+If you want to try hardware cursors, you can enable them by setting `cursor:no_hardware_cursors = false`,
+but it will require also enabling `cursor:allow_dumb_copy` which
+may cause small to major hitches whenever the cursor shape changes. If this is a problem on your system,
 keep hardware cursors disabled.
 
 {{< /callout >}}
 
 ## Finishing up
 
-Install a few packages to get some apps to function natively with Wayland for the 
-best compatibility and performance. 
+Install a few packages to get some apps to function natively with Wayland for the
+best compatibility and performance.
 See the [the Master Tutorial](https://wiki.hyprland.org/Getting-Started/Master-Tutorial/#force-apps-to-use-wayland).
 
 Reboot your computer.
@@ -122,10 +125,10 @@ The install instructions are available in the README, however, a quick guide wil
 be given here:
 
 1. Install the package. On Arch, this is `libva-nvidia-driver` in the official
-  repos.
+   repos.
 
 2. Add this variable to your hyprland config:
-   ```sh
+   ```ini
    env = NVD_BACKEND,direct
    ```
 
@@ -138,13 +141,10 @@ You can check the README to get it working for Firefox.
 
 ### Regarding environment variables
 
-- If you encounter crashes in Firefox, remove the line
-`env = GBM_BACKEND,nvidia-drm`.
-
 - If you face problems with Discord windows not displaying or screen sharing not
-working in Zoom, first try running them in Native Wayland (more details below).
-Otherwise, remove or comment the line
-`env = __GLX_VENDOR_LIBRARY_NAME,nvidia`.
+  working in Zoom, first try running them in Native Wayland (more details below).
+  Otherwise, remove or comment the line
+  `env = __GLX_VENDOR_LIBRARY_NAME,nvidia`.
 
 ### Multi-monitor with hybrid graphics
 
@@ -161,7 +161,7 @@ To fix the flickering, try running the apps in native Wayland instead.
 For most Electron apps, you should be fine just adding this
 environment variable to your config:
 
-```sh
+```ini
 env = ELECTRON_OZONE_PLATFORM_HINT,auto
 ```
 
@@ -176,10 +176,10 @@ For other apps, including CEF apps, you will need to launch them with these flag
 
 To do this easily for Spotify, Arch Linux has a `spotify-launcher` packages
 in their official repos. You should use that instead of the `spotify`
-package in the AUR. Then, enable the Wayland backend in 
+package in the AUR. Then, enable the Wayland backend in
 `/etc/spotify-launcher.conf` by uncommenting this line:
 
-```sh
+```sh {filename="/etc/spotify-launcher.conf"}
 extra_arguments = ["--enable-features=UseOzonePlatform", "--ozone-platform=wayland"]
 ```
 
@@ -204,7 +204,7 @@ Wayland, the flickering will likely be solved in the 555 series of Nvidia driver
 
 ### Flickering in XWayland games
 
-XWayland games may flicker or present frames out-of-order in a way which makes them unplayable. 
+XWayland games may flicker or present frames out-of-order in a way which makes them unplayable.
 This is due to the lack of implicit synchronization in the driver, and/or flaky explicit sync support
 in newer ones.
 
@@ -226,12 +226,12 @@ There are a few fixes:
 Note that this forces performance mode to be active, resulting in
 increased power-consumption (from 22W idle on a RTX 3070TI, to 74W).
 
-This may not be needed for some users. Only apply these 'fixes' if you 
+This may not be needed for some users. Only apply these 'fixes' if you
 do notice flickering artifacts from being idle for ~5 seconds.
 
 Make a new file at `/etc/modprobe.d/nvidia.conf` and paste this in:
 
-```sh
+```conf {filename="/etc/modprobe.d/nvidia.conf"}
 options nvidia NVreg_RegistryDwords="PowerMizerEnable=0x1; PerfLevelSrc=0x2222; PowerMizerLevel=0x3; PowerMizerDefault=0x3; PowerMizerDefaultAC=0x3"
 ```
 
@@ -240,9 +240,9 @@ Reboot your computer and it should be working.
 If it does not, try:
 
 1. Lowering your monitor's refresh rate: This can stop the flickering
-  altogether.
+   altogether.
 2. Using the [Nouveau driver](https://wiki.archlinux.org/title/Nouveau) as
-  mentioned above.
+   mentioned above.
 
 ### Suspend/wakeup issues
 
@@ -262,9 +262,7 @@ make sure you're on `nvidia-dkms`.
 
 For Nix users, the equivalent of the above is
 
-```nix
-# configuration.nix
-
+```nix {filename="configuration.nix"}
 boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
 
 hardware.nvidia.powerManagement.enable = true;
